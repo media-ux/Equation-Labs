@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#0a0a0c;color:#f4f4f5;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:#9d6bff;color:#0a0a0c}
+input,textarea,button{font-family:inherit}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes floaty2{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ringpulse{0%{transform:scale(.82);opacity:.55}100%{transform:scale(1.35);opacity:0}}
+@keyframes travel{0%{left:-4%;opacity:0}14%{opacity:1}86%{opacity:1}100%{left:102%;opacity:0}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes flickr{0%,100%{opacity:1}44%{opacity:.45}52%{opacity:.85}}
+@keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes drip{0%{transform:translateY(-3px);opacity:0}30%{opacity:1}100%{transform:translateY(11px);opacity:0}}
+@keyframes rise{0%{transform:translateY(2px);opacity:0}35%{opacity:.85}100%{transform:translateY(-13px);opacity:0}}
+@keyframes glowpulse{0%,100%{opacity:.45}50%{opacity:.85}}
+@keyframes revealKf{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+[data-reveal]{opacity:1}
+@supports (animation-timeline: view()){
+  [data-reveal]{opacity:1;animation:revealKf linear both;animation-timeline:view();animation-range:entry 0% entry 65%}
+}
+[data-rm="1"] *{animation:none!important}
+[data-rm="1"] [data-reveal]{opacity:1!important;transform:none!important}
+</style>
+<script>
+(function(){
+  function countUp(node){
+    if(node.__started) return; node.__started=true;
+    var t=parseFloat(node.getAttribute('data-count'))||0, start=Date.now();
+    var iv=setInterval(function(){
+      var p=Math.min(1,(Date.now()-start)/1300); var e=1-Math.pow(1-p,3);
+      node.textContent=String(Math.round(t*e));
+      if(p>=1){ node.textContent=String(Math.round(t)); clearInterval(iv); }
+    }, 40);
+  }
+  function check(){
+    var h=window.innerHeight||800;
+    document.querySelectorAll('[data-count]').forEach(function(n){
+      if(n.__started) return;
+      var r=n.getBoundingClientRect();
+      if(r.top < h*0.92 && r.bottom > 0) countUp(n);
+    });
+  }
+  window.addEventListener('scroll', check, {passive:true});
+  setInterval(check, 450);
+  [300,900,1500].forEach(function(t){ setTimeout(check,t); });
+})();
+</script>
+</helmet>
+
+<div data-rm="{{rm}}" style="{{rootStyle}}">
+
+<nav style="position:sticky;top:0;z-index:50;background:rgba(10,10,12,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.07)">
+  <div style="max-width:1240px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;padding:0">
+      <img src="assets/logo.png" alt="Equation Labs" style="height:30px;width:auto;display:block">
+    </button>
+    <div style="display:flex;align-items:center;gap:30px">
+      <sc-for list="{{nav}}" as="item" hint-placeholder-count="5">
+        <button onClick="{{ item.onClick }}" style="{{ item.style }}">{{ item.label }}</button>
+      </sc-for>
+      <button onClick="{{ goContact }}" style="display:inline-flex;align-items:center;gap:8px;background:#f4f4f5;color:#0a0a0c;font-weight:700;font-size:14px;padding:10px 18px;border:none;border-radius:9px;cursor:pointer;transition:transform .2s" style-hover="transform:translateY(-1px)">Get in touch
+        <span style="font-family:'IBM Plex Mono';font-size:13px">→</span></button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================== HOME ===================== -->
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+<div>
+
+  <!-- HERO -->
+  <section style="position:relative;padding:130px 0 96px;overflow:hidden">
+    <sc-if value="{{grid}}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:62px 62px;-webkit-mask-image:radial-gradient(ellipse 75% 60% at 60% 0%,#000,transparent 72%);mask-image:radial-gradient(ellipse 75% 60% at 60% 0%,#000,transparent 72%);pointer-events:none"></div>
+    </sc-if>
+    <div style="position:absolute;top:-160px;right:-120px;width:680px;height:680px;background:radial-gradient(circle,rgba(157,107,255,.20),transparent 62%);pointer-events:none;animation:glowpulse 7s ease-in-out infinite"></div>
+    <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.04fr .96fr;gap:54px;align-items:center">
+      <div>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 22px;display:flex;align-items:center;gap:11px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#9d6bff;box-shadow:0 0 12px #9d6bff;animation:blink 2.4s ease-in-out infinite"></span>
+          Modular waste-to-energy gasification
+        </p>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(40px,5.4vw,72px);line-height:1.0;letter-spacing:-.03em;margin:0;color:#f4f4f5;text-wrap:balance">Turn waste into clean, <span style="background:linear-gradient(100deg,#c4a6ff,#9d6bff);-webkit-background-clip:text;background-clip:text;color:transparent">carbon-negative energy.</span></h1>
+        <p style="font-size:18px;line-height:1.62;color:#a3a3ad;margin:26px 0 0;max-width:520px">Equation Labs builds modular gasification systems that convert everyday waste into reliable power — and stable biochar that locks carbon back into the soil. Proven today in France, India and Indonesia.</p>
+        <div style="display:flex;gap:14px;margin-top:36px;flex-wrap:wrap">
+          <button onClick="{{ goTech }}" style="display:inline-flex;align-items:center;gap:10px;background:#9d6bff;color:#0a0a0c;font-weight:700;font-size:15px;padding:15px 26px;border:none;border-radius:11px;cursor:pointer;box-shadow:0 10px 34px rgba(157,107,255,.34);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-2px);box-shadow:0 16px 44px rgba(157,107,255,.46)">Explore the technology
+            <span style="font-family:'IBM Plex Mono';font-size:14px">→</span></button>
+          <button onClick="{{ goContact }}" style="display:inline-flex;align-items:center;gap:10px;background:transparent;color:#f4f4f5;font-weight:600;font-size:15px;padding:15px 24px;border:1px solid rgba(255,255,255,.16);border-radius:11px;cursor:pointer;transition:border-color .2s,background .2s" style-hover="border-color:rgba(157,107,255,.6);background:rgba(157,107,255,.06)">Talk to our team</button>
+        </div>
+        <div style="display:flex;gap:34px;margin-top:48px;flex-wrap:wrap">
+          <div><div style="font-family:'Space Grotesk';font-weight:600;font-size:26px;color:#f4f4f5">3</div><div style="font-size:13px;color:#6c6c77;margin-top:2px">Countries live</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+          <div><div style="font-family:'Space Grotesk';font-weight:600;font-size:26px;color:#f4f4f5">−CO₂</div><div style="font-size:13px;color:#6c6c77;margin-top:2px">Carbon-negative</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+          <div><div style="font-family:'Space Grotesk';font-weight:600;font-size:26px;color:#f4f4f5">24/7</div><div style="font-size:13px;color:#6c6c77;margin-top:2px">Baseload power</div></div>
+        </div>
+      </div>
+
+      <div data-reveal data-delay="120" style="position:relative;aspect-ratio:1/1;max-width:520px;justify-self:end;width:100%">
+        <div style="position:absolute;inset:4%;border:1px dashed rgba(157,107,255,.30);border-radius:50%;animation:spin 40s linear infinite"></div>
+        <div style="position:absolute;inset:17%;border:1px solid rgba(255,255,255,.06);border-radius:50%;animation:spin 28s linear infinite reverse"></div>
+        <div style="position:absolute;inset:9%;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#000;box-shadow:0 50px 130px rgba(0,0,0,.65),0 0 60px rgba(157,107,255,.12)">
+          <img src="assets/machine-full.jpg" alt="EQL gasifier unit" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;left:16px;bottom:14px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;color:rgba(244,244,245,.7);text-transform:uppercase">EQL // Gasifier unit</div>
+        </div>
+        <div style="position:absolute;left:-2%;top:14%;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,rgba(196,166,255,.38),rgba(157,107,255,.12));border:1px solid rgba(196,166,255,.55);box-shadow:0 0 32px rgba(157,107,255,.45),inset 0 0 22px rgba(196,166,255,.28);backdrop-filter:blur(3px);font-family:'Space Grotesk';font-weight:600;color:#ede5ff;font-size:18px;animation:floaty 6s ease-in-out infinite">H₂</div>
+        <div style="position:absolute;right:-1%;top:30%;width:66px;height:66px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,rgba(196,166,255,.34),rgba(157,107,255,.10));border:1px solid rgba(196,166,255,.5);box-shadow:0 0 28px rgba(157,107,255,.4),inset 0 0 18px rgba(196,166,255,.25);backdrop-filter:blur(3px);font-family:'Space Grotesk';font-weight:600;color:#ede5ff;font-size:15px;animation:floaty2 7.5s ease-in-out infinite .4s">CO</div>
+        <div style="position:absolute;right:8%;bottom:6%;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,rgba(196,166,255,.36),rgba(157,107,255,.12));border:1px solid rgba(196,166,255,.55);box-shadow:0 0 30px rgba(157,107,255,.45),inset 0 0 20px rgba(196,166,255,.25);backdrop-filter:blur(3px);animation:floaty 5.4s ease-in-out infinite .2s">
+          <span style="color:#c4a6ff;display:grid;place-items:center;animation:flickr 2.6s ease-in-out infinite"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE EQUATION / PROCESS FLOW -->
+  <section style="padding:40px 0 110px">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="text-align:center;max-width:680px;margin:0 auto 56px">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">The equation</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.02em;margin:0;color:#f4f4f5;text-wrap:balance">One reaction. Nothing wasted.</h2>
+        <p style="font-size:17px;line-height:1.6;color:#a3a3ad;margin:18px 0 0">Waste goes in. Clean energy and carbon-locking biochar come out — continuously, on-site, off-grid.</p>
+      </div>
+
+      <div data-reveal data-delay="120" style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:linear-gradient(180deg,#121216,#0d0d10);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:40px 30px">
+        <!-- INPUT -->
+        <div style="width:206px;background:#16161b;border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:13px">
+          <span style="width:46px;height:46px;border-radius:12px;background:rgba(157,107,255,.1);border:1px solid rgba(157,107,255,.25);display:grid;place-items:center;color:#c4a6ff"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 8 12 4l8 4v8l-8 4-8-4Z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg></span>
+          <div><div style="font-family:'IBM Plex Mono';font-size:10.5px;letter-spacing:.16em;color:#6c6c77;text-transform:uppercase">Input</div>
+          <div style="font-family:'Space Grotesk';font-weight:600;font-size:19px;color:#f4f4f5;margin-top:3px">Waste in</div></div>
+          <div style="font-size:13px;color:#8a8a93;line-height:1.5">Biomass · agri-residue · sorted municipal waste</div>
+        </div>
+        <!-- pipe -->
+        <div style="flex:1;min-width:64px;position:relative;align-self:center;height:2px;background:linear-gradient(90deg,rgba(157,107,255,.04),rgba(157,107,255,.45),rgba(157,107,255,.04))">
+          <span style="position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#c4a6ff;box-shadow:0 0 12px #9d6bff;transform:translateY(-50%);animation:travel var(--flow,3s) linear infinite"></span>
+          <span style="position:absolute;top:50%;width:6px;height:6px;border-radius:50%;background:#9d6bff;box-shadow:0 0 10px #9d6bff;transform:translateY(-50%);animation:travel var(--flow,3s) linear infinite;animation-delay:1.2s"></span>
+        </div>
+        <!-- REACTOR -->
+        <div style="position:relative;width:238px;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:13px;background:linear-gradient(180deg,#1c1726,#141019);border:1px solid rgba(157,107,255,.3);box-shadow:0 0 50px rgba(157,107,255,.18)">
+          <div style="position:absolute;inset:0;border:1px solid rgba(157,107,255,.45);border-radius:18px;animation:ringpulse 3s ease-out infinite;pointer-events:none"></div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="position:relative;width:48px;height:48px;display:grid;place-items:center">
+              <span style="position:absolute;inset:0;border:1.5px dashed rgba(196,166,255,.7);border-radius:50%;animation:spin 6s linear infinite"></span>
+              <span style="width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#c4a6ff,#7c44e6);box-shadow:0 0 18px #9d6bff;animation:glowpulse 2s ease-in-out infinite"></span>
+            </span>
+            <div><div style="font-family:'IBM Plex Mono';font-size:10.5px;letter-spacing:.16em;color:#b79bff;text-transform:uppercase">Reaction</div>
+            <div style="font-family:'Space Grotesk';font-weight:600;font-size:19px;color:#f4f4f5;margin-top:3px">EQL Gasifier</div></div>
+          </div>
+          <div style="font-size:13px;color:#a99fc0;line-height:1.5">Oxygen-starved heat, 800–1200°C — feedstock breaks into syngas instead of burning.</div>
+        </div>
+        <!-- pipe -->
+        <div style="flex:1;min-width:64px;position:relative;align-self:center;height:2px;background:linear-gradient(90deg,rgba(157,107,255,.04),rgba(157,107,255,.45),rgba(157,107,255,.04))">
+          <span style="position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#c4a6ff;box-shadow:0 0 12px #9d6bff;transform:translateY(-50%);animation:travel var(--flow,3s) linear infinite;animation-delay:.6s"></span>
+          <span style="position:absolute;top:50%;width:6px;height:6px;border-radius:50%;background:#9d6bff;box-shadow:0 0 10px #9d6bff;transform:translateY(-50%);animation:travel var(--flow,3s) linear infinite;animation-delay:1.8s"></span>
+        </div>
+        <!-- OUTPUTS -->
+        <div style="display:flex;flex-direction:column;gap:12px;width:214px">
+          <div style="background:#16161b;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:13px">
+            <span style="color:#c4a6ff;display:grid;place-items:center;animation:flickr 2.8s ease-in-out infinite"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span>
+            <div><div style="font-family:'Space Grotesk';font-weight:600;font-size:16px;color:#f4f4f5">Clean energy</div><div style="font-size:12px;color:#8a8a93">Electricity · heat</div></div>
+          </div>
+          <div style="background:#16161b;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:13px">
+            <span style="color:#9d6bff;display:grid;place-items:center"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 21 8 12 13 3 8Z"/><path d="M3 13l9 5 9-5"/></svg></span>
+            <div><div style="font-family:'Space Grotesk';font-weight:600;font-size:16px;color:#f4f4f5">Biochar</div><div style="font-size:12px;color:#8a8a93">Carbon, locked away</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section style="padding:96px 0;background:#0c0c0e;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="max-width:640px;margin-bottom:52px">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">The problem</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.02em;margin:0;color:#f4f4f5;text-wrap:balance">Business as usual burns money and carbon.</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+        <div data-reveal style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#141418">
+          <div style="height:172px;overflow:hidden;position:relative"><img src="assets/landfill.jpg" alt="" style="width:100%;height:100%;object-fit:cover;filter:grayscale(.2)"><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(20,20,24,.85))"></div></div>
+          <div style="padding:22px"><div style="font-family:'IBM Plex Mono';font-size:11px;color:#9d6bff;letter-spacing:.14em">01</div><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:20px;margin:8px 0 8px;color:#f4f4f5">Landfills leak methane</h3><p style="font-size:14.5px;line-height:1.55;color:#a3a3ad;margin:0">Organic waste rotting in the open releases methane — a gas roughly 80× more potent than CO₂ over 20 years.</p></div>
+        </div>
+        <div data-reveal data-delay="120" style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#141418">
+          <div style="height:172px;overflow:hidden;position:relative"><img src="assets/smokestacks.jpg" alt="" style="width:100%;height:100%;object-fit:cover;filter:grayscale(.2)"><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(20,20,24,.85))"></div></div>
+          <div style="padding:22px"><div style="font-family:'IBM Plex Mono';font-size:11px;color:#9d6bff;letter-spacing:.14em">02</div><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:20px;margin:8px 0 8px;color:#f4f4f5">Incineration wastes the energy</h3><p style="font-size:14.5px;line-height:1.55;color:#a3a3ad;margin:0">Burning waste throws away its energy value and pushes carbon straight into the atmosphere.</p></div>
+        </div>
+        <div data-reveal data-delay="240" style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#141418">
+          <div style="height:172px;overflow:hidden;position:relative"><img src="assets/machine-wide.jpg" alt="" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(20,20,24,.85))"></div></div>
+          <div style="padding:22px"><div style="font-family:'IBM Plex Mono';font-size:11px;color:#9d6bff;letter-spacing:.14em">03</div><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:20px;margin:8px 0 8px;color:#f4f4f5">Diesel keeps the lights on</h3><p style="font-size:14.5px;line-height:1.55;color:#a3a3ad;margin:0">Off-grid sites still lean on diesel generators — expensive, polluting, and exposed to fuel supply shocks.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTCOMES -->
+  <section style="padding:106px 0">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:50px">
+        <div style="max-width:560px"><p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">What comes out</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.02em;margin:0;color:#f4f4f5;text-wrap:balance">Three outputs from one machine.</h2></div>
+        <button onClick="{{ goTech }}" style="background:none;border:none;color:#c4a6ff;font-weight:600;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap">How it works <span style="font-family:'IBM Plex Mono'">→</span></button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+        <div data-reveal style="background:#141418;border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;transition:transform .3s,border-color .3s" style-hover="transform:translateY(-6px);border-color:rgba(157,107,255,.4)">
+          <div style="height:188px;overflow:hidden"><img src="assets/machine-full.jpg" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <div style="padding:26px">
+            <span style="width:46px;height:46px;border-radius:12px;background:rgba(157,107,255,.1);border:1px solid rgba(157,107,255,.25);display:grid;place-items:center;color:#c4a6ff"><span style="animation:flickr 2.6s ease-in-out infinite;display:grid"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span></span>
+            <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:21px;margin:16px 0 9px;color:#f4f4f5">Clean, reliable energy</h3>
+            <p style="font-size:14.5px;line-height:1.58;color:#a3a3ad;margin:0">Syngas drives generators for 24/7 electricity and heat — replacing diesel right at the source.</p>
+          </div>
+        </div>
+        <div data-reveal data-delay="120" style="background:#141418;border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;transition:transform .3s,border-color .3s" style-hover="transform:translateY(-6px);border-color:rgba(157,107,255,.4)">
+          <div style="height:188px;overflow:hidden"><img src="assets/biochar-soil.jpg" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <div style="padding:26px">
+            <span style="width:46px;height:46px;border-radius:12px;background:rgba(157,107,255,.1);border:1px solid rgba(157,107,255,.25);display:grid;place-items:center;color:#c4a6ff"><span style="animation:sway 4s ease-in-out infinite;display:grid;transform-origin:bottom center"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M4 20c0-9 6-15 16-15 0 10-6 16-16 15Z"/><path d="M9 16 16 9"/></svg></span></span>
+            <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:21px;margin:16px 0 9px;color:#f4f4f5">Carbon-negative biochar</h3>
+            <p style="font-size:14.5px;line-height:1.58;color:#a3a3ad;margin:0">Every cycle yields stable biochar that locks carbon in soil for centuries and restores fertility.</p>
+          </div>
+        </div>
+        <div data-reveal data-delay="240" style="background:#141418;border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;transition:transform .3s,border-color .3s" style-hover="transform:translateY(-6px);border-color:rgba(157,107,255,.4)">
+          <div style="height:188px;overflow:hidden"><img src="assets/biochar.png" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <div style="padding:26px">
+            <span style="width:46px;height:46px;border-radius:12px;background:rgba(157,107,255,.1);border:1px solid rgba(157,107,255,.25);display:grid;place-items:center;color:#c4a6ff"><span style="animation:spin 9s linear infinite;display:grid"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 12a8 8 0 0 1 13-6l1.5 1.5"/><path d="M19 3v4h-4"/><path d="M20 12a8 8 0 0 1-13 6L5.5 16.5"/><path d="M5 21v-4h4"/></svg></span></span>
+            <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:21px;margin:16px 0 9px;color:#f4f4f5">Less landfill, less methane</h3>
+            <p style="font-size:14.5px;line-height:1.58;color:#a3a3ad;margin:0">Waste is diverted and valorised on-site — cutting hauling, tipping fees and fugitive emissions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section style="padding:30px 0 96px">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden">
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(34px,4vw,50px);color:#c4a6ff;line-height:1"><span data-count="3">3</span></div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Countries live</div><div style="font-size:13px;color:#6c6c77;margin-top:3px">France · India · Indonesia</div></div>
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(34px,4vw,50px);color:#c4a6ff;line-height:1"><span data-count="2">2</span></div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Modular models</div><div style="font-size:13px;color:#6c6c77;margin-top:3px">EQL · EQX</div></div>
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(34px,4vw,50px);color:#c4a6ff;line-height:1"><span data-count="100">100</span>%</div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Containerised</div><div style="font-size:13px;color:#6c6c77;margin-top:3px">Deploy anywhere, off-grid</div></div>
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(34px,4vw,50px);color:#c4a6ff;line-height:1">−CO₂</div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Carbon-negative</div><div style="font-size:13px;color:#6c6c77;margin-top:3px">By design, every cycle</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPLOYMENTS TEASER -->
+  <section style="padding:96px 0;background:#0c0c0e;border-top:1px solid rgba(255,255,255,.06)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:46px">
+        <div style="max-width:560px"><p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">Proven in the field</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.02em;margin:0;color:#f4f4f5">Running on three continents.</h2></div>
+        <button onClick="{{ goImpact }}" style="background:none;border:none;color:#c4a6ff;font-weight:600;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap">See our impact <span style="font-family:'IBM Plex Mono'">→</span></button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+        <div data-reveal style="background:#141418;border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden">
+          <div style="height:160px;overflow:hidden;position:relative"><img src="assets/machine-full.jpg" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;top:14px;left:14px;font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;background:rgba(10,10,12,.7);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14);color:#c4a6ff;padding:5px 10px;border-radius:7px">FR — France</span></div>
+          <div style="padding:22px"><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:20px;margin:0 0 4px;color:#f4f4f5">France</h3><div style="font-size:13px;color:#9d6bff;font-weight:600;margin-bottom:10px">European pilot</div><p style="font-size:14px;line-height:1.55;color:#a3a3ad;margin:0">Proving continuous operation and emissions performance under EU standards.</p></div>
+        </div>
+        <div data-reveal data-delay="120" style="background:#141418;border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden">
+          <div style="height:160px;overflow:hidden;position:relative"><img src="assets/biochar.png" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;top:14px;left:14px;font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;background:rgba(10,10,12,.7);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14);color:#c4a6ff;padding:5px 10px;border-radius:7px">IN — India</span></div>
+          <div style="padding:22px"><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:20px;margin:0 0 4px;color:#f4f4f5">India</h3><div style="font-size:13px;color:#9d6bff;font-weight:600;margin-bottom:10px">Decentralised rural power</div><p style="font-size:14px;line-height:1.55;color:#a3a3ad;margin:0">Turning agricultural residue into local electricity — displacing diesel off the grid.</p></div>
+        </div>
+        <div data-reveal data-delay="240" style="background:#141418;border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden">
+          <div style="height:160px;overflow:hidden;position:relative"><img src="assets/biochar-soil.jpg" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;top:14px;left:14px;font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;background:rgba(10,10,12,.7);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14);color:#c4a6ff;padding:5px 10px;border-radius:7px">ID — Indonesia</span></div>
+          <div style="padding:22px"><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:20px;margin:0 0 4px;color:#f4f4f5">Indonesia</h3><div style="font-size:13px;color:#9d6bff;font-weight:600;margin-bottom:10px">Agri-residue valorisation</div><p style="font-size:14px;line-height:1.55;color:#a3a3ad;margin:0">Converting husks and organic waste into energy and biochar for soil regeneration.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding:110px 0">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="position:relative;overflow:hidden;border-radius:26px;border:1px solid rgba(157,107,255,.28);background:linear-gradient(135deg,#16101f,#0e0c12);padding:72px 56px;text-align:center">
+        <div style="position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:560px;height:560px;background:radial-gradient(circle,rgba(157,107,255,.22),transparent 60%);pointer-events:none;animation:glowpulse 7s ease-in-out infinite"></div>
+        <div style="position:relative">
+          <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(30px,4vw,52px);line-height:1.05;letter-spacing:-.02em;margin:0;color:#f4f4f5;text-wrap:balance;max-width:680px;margin:0 auto">Have a waste stream? Let's turn it into energy.</h2>
+          <p style="font-size:17px;color:#a99fc0;margin:20px auto 0;max-width:520px;line-height:1.6">Tell us about your site and feedstock. We'll show you what an EQL unit could do.</p>
+          <div style="display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap">
+            <button onClick="{{ goContact }}" style="display:inline-flex;align-items:center;gap:10px;background:#9d6bff;color:#0a0a0c;font-weight:700;font-size:15px;padding:15px 28px;border:none;border-radius:11px;cursor:pointer;box-shadow:0 10px 34px rgba(157,107,255,.34);transition:transform .2s" style-hover="transform:translateY(-2px)">Start a conversation <span style="font-family:'IBM Plex Mono'">→</span></button>
+            <button onClick="{{ goAbout }}" style="background:transparent;color:#f4f4f5;font-weight:600;font-size:15px;padding:15px 24px;border:1px solid rgba(255,255,255,.18);border-radius:11px;cursor:pointer">About Equation Labs</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</sc-if>
+
+<!-- ===================== TECHNOLOGY ===================== -->
+<sc-if value="{{isTech}}" hint-placeholder-val="{{ false }}">
+<div>
+  <section style="position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.07)">
+    <div style="position:absolute;inset:0"><img src="assets/reactor-closeup.jpg" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.5"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,#0a0a0c 30%,rgba(10,10,12,.4))"></div>
+    <div style="position:relative;max-width:1240px;margin:0 auto;padding:128px 32px 110px">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 18px">Technology</p>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(38px,5vw,68px);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:680px;text-wrap:balance">Gasification, not incineration.</h1>
+      <p style="font-size:18px;line-height:1.62;color:#c2c2cb;margin:24px 0 0;max-width:540px">The EQL system heats waste in a starved-oxygen reactor so it breaks down into clean syngas — capturing the energy and the carbon instead of releasing them.</p>
+    </div>
+  </section>
+
+  <!-- PROCESS STEPS -->
+  <section style="padding:106px 0">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="max-width:600px;margin-bottom:54px">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">The process</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,44px);line-height:1.06;letter-spacing:-.02em;margin:0">Five steps, one continuous loop.</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+          <div data-reveal style="display:grid;grid-template-columns:88px 1fr;gap:28px;align-items:center;background:#121216;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px 30px;transition:border-color .3s,background .3s" style-hover="border-color:rgba(157,107,255,.4);background:#16121c">
+            <div style="font-family:'Space Grotesk';font-weight:600;font-size:40px;color:rgba(157,107,255,.55);line-height:1">{{ s.n }}</div>
+            <div style="display:flex;flex-direction:column;gap:7px"><h3 style="font-family:'Space Grotesk';font-weight:600;font-size:22px;margin:0;color:#f4f4f5">{{ s.t }}</h3><p style="font-size:15px;line-height:1.58;color:#a3a3ad;margin:0;max-width:760px">{{ s.d }}</p></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section style="padding:96px 0;background:#0c0c0e;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:start">
+      <div data-reveal style="">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">At a glance</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,3.4vw,42px);line-height:1.06;letter-spacing:-.02em;margin:0 0 18px">Engineered for the field.</h2>
+        <p style="font-size:16px;line-height:1.62;color:#a3a3ad;margin:0">Every unit ships containerised and ready to run off-grid — designed for service in places the grid never reached.</p>
+      </div>
+      <div data-reveal data-delay="120" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden">
+        <sc-for list="{{specs}}" as="sp" hint-placeholder-count="8">
+          <div style="background:#0e0e11;padding:22px 24px"><div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6c6c77;margin-bottom:8px">{{ sp.k }}</div><div style="font-family:'Space Grotesk';font-weight:600;font-size:17px;color:#f4f4f5">{{ sp.v }}</div></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELS -->
+  <section style="padding:106px 0">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="margin-bottom:44px"><p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">The range</p><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,44px);line-height:1.06;letter-spacing:-.02em;margin:0">Two models. Same chemistry.</h2></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div data-reveal style="border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#141418">
+          <div style="height:260px;overflow:hidden;background:#000"><img src="assets/machine-full.jpg" alt="EQL" style="width:100%;height:100%;object-fit:cover"></div>
+          <div style="padding:30px"><div style="display:flex;align-items:baseline;gap:12px"><h3 style="font-family:'Space Grotesk';font-weight:700;font-size:28px;margin:0;color:#f4f4f5">EQL</h3><span style="font-family:'IBM Plex Mono';font-size:12px;color:#9d6bff;letter-spacing:.1em">CORE UNIT</span></div><p style="font-size:15px;line-height:1.6;color:#a3a3ad;margin:12px 0 0">The standard gasifier module — a self-contained waste-to-energy plant sized for a single site.</p></div>
+        </div>
+        <div data-reveal data-delay="120" style="border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#141418">
+          <div style="height:260px;overflow:hidden;background:#000"><img src="assets/machine-wide.jpg" alt="EQX" style="width:100%;height:100%;object-fit:cover"></div>
+          <div style="padding:30px"><div style="display:flex;align-items:baseline;gap:12px"><h3 style="font-family:'Space Grotesk';font-weight:700;font-size:28px;margin:0;color:#f4f4f5">EQX</h3><span style="font-family:'IBM Plex Mono';font-size:12px;color:#9d6bff;letter-spacing:.1em">SCALE UNIT</span></div><p style="font-size:15px;line-height:1.6;color:#a3a3ad;margin:12px 0 0">The high-throughput configuration — engineered for larger feedstock volumes and industrial demand.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 0 110px"><div style="max-width:1240px;margin:0 auto;padding:0 32px"><div data-reveal style="border-radius:22px;border:1px solid rgba(157,107,255,.28);background:linear-gradient(135deg,#16101f,#0e0c12);padding:56px;display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap"><div><h2 style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(24px,2.6vw,34px);margin:0;color:#f4f4f5">See how it fits your site.</h2><p style="font-size:16px;color:#a99fc0;margin:10px 0 0">Share your feedstock and we'll model the output.</p></div><button onClick="{{ goContact }}" style="display:inline-flex;align-items:center;gap:10px;background:#9d6bff;color:#0a0a0c;font-weight:700;font-size:15px;padding:15px 28px;border:none;border-radius:11px;cursor:pointer;white-space:nowrap;box-shadow:0 10px 34px rgba(157,107,255,.34)">Talk to us <span style="font-family:'IBM Plex Mono'">→</span></button></div></div></section>
+</div>
+</sc-if>
+
+<!-- ===================== IMPACT ===================== -->
+<sc-if value="{{isImpact}}" hint-placeholder-val="{{ false }}">
+<div>
+  <section style="position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.07);padding:128px 0 96px">
+    <div style="position:absolute;top:-140px;left:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(157,107,255,.18),transparent 62%);animation:glowpulse 7s ease-in-out infinite;pointer-events:none"></div>
+    <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 32px">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 18px">Impact</p>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(38px,5vw,68px);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:720px;text-wrap:balance">Real hardware. Real sites. Real carbon removed.</h1>
+      <p style="font-size:18px;line-height:1.62;color:#a3a3ad;margin:24px 0 0;max-width:560px">From a European pilot to off-grid villages, EQL units are running today — diverting waste, displacing diesel and locking carbon into soil.</p>
+    </div>
+  </section>
+
+  <section style="padding:90px 0">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px;display:flex;flex-direction:column;gap:24px">
+      <div data-reveal style="display:grid;grid-template-columns:.9fr 1.1fr;gap:0;border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;background:#121216">
+        <div style="min-height:300px;position:relative;background:#000"><img src="assets/machine-full.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
+        <div style="padding:48px;display:flex;flex-direction:column;justify-content:center;gap:14px">
+          <span style="font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.16em;color:#9d6bff;text-transform:uppercase">FR — France</span>
+          <h2 style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(26px,3vw,38px);margin:0;color:#f4f4f5">European pilot</h2>
+          <p style="font-size:16px;line-height:1.62;color:#a3a3ad;margin:0;max-width:480px">First commercial EQL unit proving continuous operation and emissions performance under EU standards.</p>
+        </div>
+      </div>
+      <div data-reveal style="display:grid;grid-template-columns:.9fr 1.1fr;gap:0;border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;background:#121216">
+        <div style="min-height:300px;position:relative;background:#000"><img src="assets/biochar.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
+        <div style="padding:48px;display:flex;flex-direction:column;justify-content:center;gap:14px">
+          <span style="font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.16em;color:#9d6bff;text-transform:uppercase">IN — India</span>
+          <h2 style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(26px,3vw,38px);margin:0;color:#f4f4f5">Decentralised rural power</h2>
+          <p style="font-size:16px;line-height:1.62;color:#a3a3ad;margin:0;max-width:480px">Turning agricultural residue into local electricity — displacing diesel for communities off the grid.</p>
+        </div>
+      </div>
+      <div data-reveal style="display:grid;grid-template-columns:.9fr 1.1fr;gap:0;border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;background:#121216">
+        <div style="min-height:300px;position:relative;background:#000"><img src="assets/biochar-soil.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
+        <div style="padding:48px;display:flex;flex-direction:column;justify-content:center;gap:14px">
+          <span style="font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.16em;color:#9d6bff;text-transform:uppercase">ID — Indonesia</span>
+          <h2 style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(26px,3vw,38px);margin:0;color:#f4f4f5">Agri-residue valorisation</h2>
+          <p style="font-size:16px;line-height:1.62;color:#a3a3ad;margin:0;max-width:480px">Converting husks and organic waste into energy and biochar for soil regeneration.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:30px 0 100px">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div data-reveal style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden">
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(32px,4vw,48px);color:#c4a6ff;line-height:1"><span data-count="3">3</span></div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Countries live</div></div>
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(32px,4vw,48px);color:#c4a6ff;line-height:1"><span data-count="800">800</span>°C+</div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Reactor heat</div></div>
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(32px,4vw,48px);color:#c4a6ff;line-height:1"><span data-count="24">24</span>/7</div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Baseload power</div></div>
+        <div style="background:#0e0e11;padding:34px 28px"><div style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(32px,4vw,48px);color:#c4a6ff;line-height:1">−CO₂</div><div style="font-weight:600;font-size:15px;color:#f4f4f5;margin-top:12px">Net carbon</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!-- ===================== ABOUT ===================== -->
+<sc-if value="{{isAbout}}" hint-placeholder-val="{{ false }}">
+<div>
+  <section style="position:relative;overflow:hidden;padding:128px 0 96px;border-bottom:1px solid rgba(255,255,255,.07)">
+    <sc-if value="{{grid}}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:62px 62px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 40% 0%,#000,transparent 70%);mask-image:radial-gradient(ellipse 70% 60% at 40% 0%,#000,transparent 70%);pointer-events:none"></div></sc-if>
+    <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 32px">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 18px">About</p>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(38px,5.2vw,72px);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:820px;text-wrap:balance">We think waste is just <span style="background:linear-gradient(100deg,#c4a6ff,#9d6bff);-webkit-background-clip:text;background-clip:text;color:transparent">energy in the wrong place.</span></h1>
+      <p style="font-size:18px;line-height:1.62;color:#a3a3ad;margin:26px 0 0;max-width:600px">Equation Labs is an engineering company building the gasification hardware that closes the loop — turning the world's hardest-to-handle waste into power and stable carbon.</p>
+    </div>
+  </section>
+
+  <section style="padding:96px 0">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+      <div data-reveal style="border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#000;aspect-ratio:4/3"><img src="assets/biochar-soil.jpg" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      <div data-reveal data-delay="120" style="">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 16px">Our mission</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(26px,3.2vw,40px);line-height:1.08;letter-spacing:-.02em;margin:0 0 18px">Decentralised, carbon-negative energy — anywhere.</h2>
+        <p style="font-size:16px;line-height:1.66;color:#a3a3ad;margin:0 0 14px">A billion people live without reliable power, and the world buries or burns most of its waste. We saw one answer to both: small, modular gasifiers that run where the waste already is.</p>
+        <p style="font-size:16px;line-height:1.66;color:#a3a3ad;margin:0">Our systems are built to be shipped, deployed and operated far from any grid — proving carbon-negative energy isn't a someday technology, but a working one.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:30px 0 96px">
+    <div style="max-width:1240px;margin:0 auto;padding:0 32px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+        <sc-for list="{{values}}" as="v" hint-placeholder-count="3">
+          <div data-reveal data-delay="{{ $index }}" style="background:#141418;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:30px">
+            <div style="width:42px;height:42px;border-radius:11px;background:rgba(157,107,255,.1);border:1px solid rgba(157,107,255,.25);display:grid;place-items:center;font-family:'Space Grotesk';font-weight:700;color:#c4a6ff;margin-bottom:18px">{{ v.n }}</div>
+            <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:20px;margin:0 0 9px;color:#f4f4f5">{{ v.t }}</h3>
+            <p style="font-size:14.5px;line-height:1.58;color:#a3a3ad;margin:0">{{ v.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 0 110px"><div style="max-width:1240px;margin:0 auto;padding:0 32px"><div data-reveal style="border-radius:22px;border:1px solid rgba(157,107,255,.28);background:linear-gradient(135deg,#16101f,#0e0c12);padding:56px;display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap"><div><h2 style="font-family:'Space Grotesk';font-weight:600;font-size:clamp(24px,2.6vw,34px);margin:0;color:#f4f4f5">Want to build with us?</h2><p style="font-size:16px;color:#a99fc0;margin:10px 0 0">Partners, operators and investors — we'd love to talk.</p></div><button onClick="{{ goContact }}" style="display:inline-flex;align-items:center;gap:10px;background:#9d6bff;color:#0a0a0c;font-weight:700;font-size:15px;padding:15px 28px;border:none;border-radius:11px;cursor:pointer;white-space:nowrap;box-shadow:0 10px 34px rgba(157,107,255,.34)">Get in touch <span style="font-family:'IBM Plex Mono'">→</span></button></div></div></section>
+</div>
+</sc-if>
+
+<!-- ===================== CONTACT ===================== -->
+<sc-if value="{{isContact}}" hint-placeholder-val="{{ false }}">
+<div>
+  <section style="position:relative;overflow:hidden;padding:128px 0 110px">
+    <div style="position:absolute;top:-150px;right:-100px;width:620px;height:620px;background:radial-gradient(circle,rgba(157,107,255,.18),transparent 62%);animation:glowpulse 7s ease-in-out infinite;pointer-events:none"></div>
+    <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:start">
+      <div>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#9d6bff;margin:0 0 18px">Contact</p>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(36px,4.6vw,60px);line-height:1.04;letter-spacing:-.03em;margin:0;text-wrap:balance">Let's turn your waste into energy.</h1>
+        <p style="font-size:17px;line-height:1.62;color:#a3a3ad;margin:24px 0 40px;max-width:440px">Tell us about your site and feedstock. Our team will come back with what an EQL unit could do for you.</p>
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div><div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#6c6c77;margin-bottom:7px">Email</div><a href="mailto:info@equation-labs.co" style="font-family:'Space Grotesk';font-weight:600;font-size:20px;color:#c4a6ff;text-decoration:none">info@equation-labs.co</a></div>
+          <div><div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#6c6c77;margin-bottom:7px">Where we are</div><div style="font-family:'Space Grotesk';font-weight:600;font-size:18px;color:#f4f4f5">Paris · Bengaluru · Jakarta</div></div>
+        </div>
+      </div>
+      <div data-reveal style="background:#121216;border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:38px">
+        <sc-if value="{{ formSent }}" hint-placeholder-val="{{ false }}">
+          <div style="min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px">
+            <span style="width:64px;height:64px;border-radius:50%;background:rgba(157,107,255,.12);border:1px solid rgba(157,107,255,.4);display:grid;place-items:center;color:#c4a6ff"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:24px;margin:0;color:#f4f4f5">Thanks — message received.</h3>
+            <p style="font-size:15px;color:#a3a3ad;margin:0;max-width:320px">We'll be in touch within two business days.</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showForm }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ submit }}" style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:13px;font-weight:600;color:#a3a3ad">Name</span><input name="name" required placeholder="Jane Doe" style="background:#0c0c0e;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 14px;color:#f4f4f5;font-size:15px;outline:none;transition:border-color .2s" style-focus="border-color:#9d6bff"></label>
+            <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:13px;font-weight:600;color:#a3a3ad">Email</span><input name="email" required type="email" placeholder="jane@company.com" style="background:#0c0c0e;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 14px;color:#f4f4f5;font-size:15px;outline:none;transition:border-color .2s" style-focus="border-color:#9d6bff"></label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:13px;font-weight:600;color:#a3a3ad">Organisation</span><input name="organisation" placeholder="Company / municipality" style="background:#0c0c0e;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 14px;color:#f4f4f5;font-size:15px;outline:none;transition:border-color .2s" style-focus="border-color:#9d6bff"></label>
+          <label style="display:flex;flex-direction:column;gap:7px"><span style="font-size:13px;font-weight:600;color:#a3a3ad">Tell us about your feedstock &amp; site</span><textarea name="message" rows="4" placeholder="Waste type, volume, location…" style="background:#0c0c0e;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 14px;color:#f4f4f5;font-size:15px;outline:none;resize:vertical;font-family:inherit;transition:border-color .2s" style-focus="border-color:#9d6bff"></textarea></label>
+          <button type="submit" disabled="{{ sending }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#9d6bff;color:#0a0a0c;font-weight:700;font-size:15px;padding:15px 26px;border:none;border-radius:11px;cursor:pointer;box-shadow:0 10px 34px rgba(157,107,255,.32);transition:transform .2s" style-hover="transform:translateY(-2px)">{{ btnLabel }} <span style="font-family:'IBM Plex Mono'">→</span></button>
+          <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}"><div style="color:#ff8f8f;font-size:13px;line-height:1.5;margin-top:-4px">Couldn't send right now — please email <a href="mailto:info@equation-labs.co" style="color:#ff8f8f">info@equation-labs.co</a> directly.</div></sc-if>
+        </form>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+<!--ENDPAGES-->
+
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid rgba(255,255,255,.08);background:#08080a;padding:64px 0 38px">
+  <div style="max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px">
+    <div style="max-width:300px">
+      <img src="assets/logo.png" alt="Equation Labs" style="height:30px;width:auto;display:block;margin-bottom:16px">
+      <p style="font-size:14px;line-height:1.6;color:#8a8a93;margin:0">Modular gasification that turns waste into clean, carbon-negative energy and biochar.</p>
+    </div>
+    <div>
+      <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;color:#6c6c77;text-transform:uppercase;margin-bottom:16px">Explore</div>
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <button onClick="{{ goTech }}" style="background:none;border:none;text-align:left;color:#a3a3ad;font-size:14px;cursor:pointer;padding:0;transition:color .2s" style-hover="color:#f4f4f5">Technology</button>
+        <button onClick="{{ goImpact }}" style="background:none;border:none;text-align:left;color:#a3a3ad;font-size:14px;cursor:pointer;padding:0;transition:color .2s" style-hover="color:#f4f4f5">Impact</button>
+        <button onClick="{{ goAbout }}" style="background:none;border:none;text-align:left;color:#a3a3ad;font-size:14px;cursor:pointer;padding:0;transition:color .2s" style-hover="color:#f4f4f5">About</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;color:#6c6c77;text-transform:uppercase;margin-bottom:16px">Company</div>
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <button onClick="{{ goContact }}" style="background:none;border:none;text-align:left;color:#a3a3ad;font-size:14px;cursor:pointer;padding:0;transition:color .2s" style-hover="color:#f4f4f5">Contact</button>
+        <a href="#" style="color:#a3a3ad;font-size:14px;text-decoration:none;transition:color .2s" style-hover="color:#f4f4f5">News</a>
+        <a href="#" style="color:#a3a3ad;font-size:14px;text-decoration:none;transition:color .2s" style-hover="color:#f4f4f5">Careers</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.16em;color:#6c6c77;text-transform:uppercase;margin-bottom:16px">Reach us</div>
+      <a href="mailto:info@equation-labs.co" style="color:#c4a6ff;font-size:14px;text-decoration:none">info@equation-labs.co</a>
+      <div style="font-size:14px;color:#8a8a93;margin-top:11px">Paris · Bengaluru · Jakarta</div>
+    </div>
+  </div>
+  <div style="max-width:1240px;margin:44px auto 0;padding:24px 32px 0;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div style="font-size:13px;color:#6c6c77">© {{ year }} Equation Labs. All rights reserved.</div>
+    <div style="font-size:13px;color:#6c6c77;font-family:'IBM Plex Mono'">Waste → Energy + Biochar</div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showBackgroundGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;processSpeed&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;normal&quot;,&quot;options&quot;:[&quot;slow&quot;,&quot;normal&quot;,&quot;fast&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { page: 'home', formSent: false, sending: false, formError: false };
+
+  go = (id) => {
+    if (id === this.state.page) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    this.setState({ page: id, formSent: false, sending: false, formError: false });
+    window.scrollTo({ top: 0 });
+  };
+
+  submit = async (e) => {
+    e.preventDefault();
+    if (this.state.sending) return;
+    const form = e.target;
+    const payload = {};
+    new FormData(form).forEach((v, k) => { payload[k] = v; });
+    payload._subject = 'New enquiry — Equation Labs website';
+    payload._template = 'table';
+    payload._captcha = 'false';
+    this.setState({ sending: true, formError: false });
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/info@equation-labs.co', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('request failed');
+      this.setState({ formSent: true, sending: false });
+    } catch (err) {
+      this.setState({ sending: false, formError: true });
+    }
+  };
+
+  renderVals() {
+    const page = this.state.page;
+    const rm = (this.props.reduceMotion ?? false) ? '1' : '0';
+    const speed = this.props.processSpeed ?? 'normal';
+    const flowDur = speed === 'slow' ? '4.5s' : speed === 'fast' ? '1.8s' : '3s';
+    const grid = this.props.showBackgroundGrid ?? true;
+
+    const mk = (id, label) => ({
+      id, label, onClick: () => this.go(id),
+      style: 'background:none;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:8px 1px;color:' +
+        (page === id ? '#f4f4f5' : '#8a8a93') + ';border-bottom:2px solid ' +
+        (page === id ? '#9d6bff' : 'transparent') + ';transition:color .2s'
+    });
+
+    const deployments = [
+      { flag: 'FR — France', country: 'France', t: 'European pilot', d: 'Proving continuous operation and emissions performance under EU standards.', img: 'assets/machine-full.jpg', delay: 0 },
+      { flag: 'IN — India', country: 'India', t: 'Decentralised rural power', d: 'Turning agricultural residue into local electricity — displacing diesel off the grid.', img: 'assets/biochar.png', delay: 120 },
+      { flag: 'ID — Indonesia', country: 'Indonesia', t: 'Agri-residue valorisation', d: 'Converting husks and organic waste into energy and biochar for soil regeneration.', img: 'assets/biochar-soil.jpg', delay: 240 }
+    ];
+    const steps = [
+      { n: '01', t: 'Feed & dry', d: 'Mixed waste — biomass, agri-residue, sorted MSW — is loaded and dried using the system\u2019s own recovered heat.' },
+      { n: '02', t: 'Gasify', d: 'In an oxygen-starved reactor at 800\u20131200\u00b0C, feedstock breaks down into combustible syngas instead of burning.' },
+      { n: '03', t: 'Clean the gas', d: 'Syngas is cooled and scrubbed to a clean, consistent fuel ready for power generation.' },
+      { n: '04', t: 'Generate power', d: 'Clean syngas drives a generator for electricity and usable heat — continuous baseload, day and night.' },
+      { n: '05', t: 'Capture carbon', d: 'Solid carbon is recovered as stable biochar — sequestering carbon and creating a valuable co-product.' }
+    ];
+    const specs = [
+      { k: 'Reactor temp', v: '800\u20131200 \u00b0C' },
+      { k: 'Process', v: 'Oxygen-starved gasification' },
+      { k: 'Footprint', v: 'Containerised, modular' },
+      { k: 'Feedstock', v: 'Biomass \u00b7 agri-residue \u00b7 sorted MSW' },
+      { k: 'Outputs', v: 'Electricity \u00b7 heat \u00b7 biochar' },
+      { k: 'Operation', v: '24/7 baseload' },
+      { k: 'Carbon', v: 'Net-negative' },
+      { k: 'Models', v: 'EQL \u00b7 EQX' }
+    ];
+    const values = [
+      { n: '1', t: 'Decentralised by design', d: 'Energy made where waste is produced — no grid, no long hauls, no middlemen.' },
+      { n: '2', t: 'Carbon-negative, not just neutral', d: 'We remove more carbon than we emit, every cycle, with biochar built in.' },
+      { n: '3', t: 'Proven, not promised', d: 'Running hardware in three countries — engineered for the real world, not the lab.' }
+    ];
+
+    return {
+      page,
+      isHome: page === 'home', isTech: page === 'tech', isImpact: page === 'impact',
+      isAbout: page === 'about', isContact: page === 'contact',
+      nav: [mk('home', 'Home'), mk('tech', 'Technology'), mk('impact', 'Impact'), mk('about', 'About'), mk('contact', 'Contact')],
+      goHome: () => this.go('home'), goTech: () => this.go('tech'), goImpact: () => this.go('impact'),
+      goAbout: () => this.go('about'), goContact: () => this.go('contact'),
+      rm, flowDur, rootStyle: '--flow:' + flowDur, grid,
+      deployments, steps, specs, values,
+      formSent: this.state.formSent, showForm: !this.state.formSent,
+      sending: this.state.sending, formError: this.state.formError,
+      btnLabel: this.state.sending ? 'Sending…' : 'Send message',
+      submit: this.submit, year: 2026
+    };
+  }
+}
+</script>
+</body>
+</html>
